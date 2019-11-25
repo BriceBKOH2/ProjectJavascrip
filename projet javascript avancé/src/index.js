@@ -20,7 +20,7 @@ hearthstoneApi.info().then((allInfo) => {
     const allPromiseSets = allInfo.sets
         .map(n => new SetType(n))
         .map(setType => {
-            return hearthstoneApi.sets(setType.name).then((cards => {
+            return hearthstoneApi.set(setType.name).then((cards => {
                 if (Array.isArray(cards)) {
                     setType.cards = cards;
                 }
