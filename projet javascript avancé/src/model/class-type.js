@@ -1,7 +1,8 @@
 export class ClassType {
+  cards = [];
 
-    constructor(name = 'Basic', cards = []) {
-        this.name = name;
-        this.cards = cards;
-    }
+  constructor(name = 'Neutral', cards = []) {
+    this.name = name;
+    this.cards = cards;
+  }
 }

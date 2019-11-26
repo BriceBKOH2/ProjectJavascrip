@@ -13,8 +13,8 @@ export class HearthstoneApi {
     get endpoint() {
         return 'https://omgvamp-hearthstone-v1.p.rapidapi.com/';
     }
-
-
+    
+    
     get headers() {
         return {
             ...this.defaultHeader,
@@ -24,32 +24,40 @@ export class HearthstoneApi {
     }
 
     info(query) {
-        return this._get('info', query).then(result => result.json());
+        return this._get('info', query).then(this._parseResult.bind(this));
     }
 
-    cards(query) {
-        return this._get('cards', query).then(result => result.json());
+    cards() {
+        return this._get('cards', query).then(this._parseResult.bind(this));
     }
 
     set(name, query) {
-        return this._get(`cards/sets/${name}`, query).then(result => result.json());
+        return this._get(`cards/sets/${name}`, query).then(this._parseResult.bind(this));
     }
 
     classes(name, query) {
-        return this._get(`cards/classes/${name}`, query).then(result => result.json());
+        return this._get(`cards/classes/${name}`, query).then(this._parseResult.bind(this));
     }
-
-
+    
+    
     _get(path, query = {}) {
         let url = `${this.endpoint}${path}`;
         const queryString = this._objectToQueryString(query);
-        if (queryString) {
+        if(queryString) {
             url += `?${queryString}`;
         }
         return fetch(url, {
             'method': 'GET',
             'headers': this.headers,
         });
+    }
+
+    _parseResult(response) {
+      if(response.ok) {
+        return response.json();
+      } else {
+        throw new Error(response);
+      }
     }
 
     _objectToQueryString(obj) {
