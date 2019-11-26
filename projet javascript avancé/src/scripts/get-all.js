@@ -1,6 +1,6 @@
-import {SetType} from '../class/set-type.js';
-import {ClassType} from '../class/class-type.js';
-import {HearthstoneApi} from './api.js';
+import { SetType } from '../model/set-type.js';
+import { ClassType } from '../model/class-type.js';
+import { HearthstoneApi } from './api.js';
 
 const hearthstoneApi = new HearthstoneApi();
 function createAllPromiseFor(data, ConstructorType, apiCalled) {
@@ -28,4 +28,20 @@ export function getAllSetAndClasses() {
   }).then((allPromise => {
     return Promise.all(allPromise);
   }));
+}
+
+// Get all the card that is the result of the intersection between a set and a class
+export function getCards(setName, className) {
+  return Promise.all([
+    hearthstoneApi.set(setName),
+    hearthstoneApi.classes(className)
+  ]).then(([setsCards, classesCards]) => {
+    let resultCards = intersection(setsCards, classesCards);
+    console.log(resultCards);
+    return resultCards;
+  });
+}
+
+function intersection(arrayCard1, arrayCard2) {
+  return arrayCard1.filter(card1 => arrayCard2.find(card2 => card2.cardId === card1.cardId));
 }
